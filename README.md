@@ -1,0 +1,2 @@
+# PruebaTecnica
+Prueba PokeAPI js 
