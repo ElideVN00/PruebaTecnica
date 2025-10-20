@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let listaPokemones = [];
   let listaFiltrada = [];
 
-  // 1️⃣ Cargar tipos en el select
+  // Cargar tipos en el select
   fetch('https://pokeapi.co/api/v2/type/')
     .then(res => res.json())
     .then(data => {
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-  // 2️⃣ Cargar todos los Pokémon
+  //Cargar todos los Pokémon
   fetch('https://pokeapi.co/api/v2/pokemon?limit=1300')
     .then(res => res.json())
     .then(data => {
