@@ -1,62 +1,110 @@
-fetch('https://pokeapi.co/api/v2/type/')//Obtener respuesta de API
-.then(response => response.json())//Transformar la respuesta a JSON
-.then((data) =>{ //Obtener la data en JSON
-    console.log({tipos: data})//Se muestra en consola la data recuperada para saber como destrucutrarla
-    const tipos = data.results
+document.addEventListener("DOMContentLoaded", () => {
+  const contenedorPokemones = document.querySelector('.container-pokemones');
+  const contenedorInfo = document.getElementById("info-pokemon");
+  const contenedorSelect = document.querySelector('.container-select-pokemon');
 
-    const selectTipos = document.createElement('select')//Crear elemento HTML tipo select
+  let listaPokemones = [];
+  let listaFiltrada = [];
 
-    //Iterar sobre el arreglo de types para llenar el select con options (Por CADA elemento en el arreglo types)
-    tipos.forEach((tipo) => {
+  // 1️⃣ Cargar tipos en el select
+  fetch('https://pokeapi.co/api/v2/type/')
+    .then(res => res.json())
+    .then(data => {
+      const tipos = data.results;
+      const selectTipos = document.createElement('select');
+      const optionDefault = document.createElement('option');
+      optionDefault.value = "";
+      optionDefault.textContent = "Todos los tipos";
+      selectTipos.appendChild(optionDefault);
 
-        /* Crear elemento html */
-        const optionTipo = document.createElement('option')
-        const nombreTipo = tipo.name
+      tipos.forEach(tipo => {
+        const option = document.createElement('option');
+        option.value = tipo.name;
+        option.textContent = tipo.name;
+        selectTipos.appendChild(option);
+      });
 
-        /* Asignar atributos html */
-        optionTipo.value = nombreTipo
-        optionTipo.textContent = nombreTipo
+      contenedorSelect.appendChild(selectTipos);
 
-        /* Inyectar como hijo de select en HTML (cada option dentro del select)*/
-        selectTipos.appendChild(optionTipo)
+      // Evento al cambiar tipo
+      selectTipos.addEventListener('change', async (e) => {
+        const tipoSeleccionado = e.target.value;
+        await filtrarPorTipo(tipoSeleccionado);
+      });
     });
 
-    /* Obtener un elemento HTML ya existente en el DOM */
-    const contenedorSelect = document.querySelector('.container-select-pokemon')
-    contenedorSelect.appendChild(selectTipos)
+  // 2️⃣ Cargar todos los Pokémon
+  fetch('https://pokeapi.co/api/v2/pokemon?limit=1300')
+    .then(res => res.json())
+    .then(data => {
+      listaPokemones = data.results;
+      listaFiltrada = [...listaPokemones];
+      renderPokemones(listaFiltrada);
+    });
 
-    /* Asignar estilos al contenedor */
-    const contenedor = document.querySelector('.container')
-    contenedor.style.display = 'flex'
-    contenedor.style.flexDirection = 'row'
-    contenedor.style.gap = '2rem'
-})
+  // Función para renderizar Pokémon en la cuadrícula
+  function renderPokemones(pokemones) {
+    contenedorPokemones.innerHTML = "";
+    contenedorPokemones.style.display = 'grid';
+    contenedorPokemones.style.gridTemplateColumns = 'repeat(4, 1fr)';
+    contenedorPokemones.style.gap = '1rem';
 
+    pokemones.forEach(pokemon => {
+      const div = document.createElement('div');
+      div.style.padding = '2rem';
+      div.style.backgroundColor = 'pink';
+      div.style.textAlign = 'center';
+      div.style.borderRadius = '10px';
+      div.style.textTransform = 'uppercase';
+      div.style.fontFamily = '"Quicksand", sans-serif';
+      div.style.fontWeight = 'bold';
 
-fetch('https://pokeapi.co/api/v2/pokemon?limit=1300')
-.then((response) => response.json())
-.then((data)=>{
-    console.log({pokemones: data})
-    const pokemones = data.results
-    const contenedorPokemones = document.querySelector('.container-pokemones')
-    
-    contenedorPokemones.style.display = 'grid'
-    contenedorPokemones.style.gridTemplateColumns = 'repeat(4, 1fr)'
-    contenedorPokemones.style.gap = '1rem'
-    pokemones.forEach((pokemon) => {
-        /* Crear HTML */
-        const contenedorNombrePokemon = document.createElement('div')
-        contenedorNombrePokemon.style.padding = '2rem'
-        contenedorNombrePokemon.style.backgroundColor = 'pink'
-        contenedorNombrePokemon.style.textAlign = 'center'
-        contenedorNombrePokemon.style.borderRadius = '10px'
-        contenedorNombrePokemon.style.textTransform = 'uppercase'
-        contenedorNombrePokemon.style.fontFamily = '"Quicksand", sans-serif'
-        contenedorNombrePokemon.style.fontWeight = 'bold'
-        /* Asignar Atributos */
-        const nombrePokemon = pokemon.name
-        contenedorNombrePokemon.textContent = nombrePokemon
-        /* inyectar */
-        contenedorPokemones.appendChild(contenedorNombrePokemon)
-    })
-})
+      div.textContent = pokemon.name;
+      div.addEventListener('click', () => mostrarInfoPokemon(pokemon.name));
+
+      contenedorPokemones.appendChild(div);
+    });
+  }
+
+  // Función para filtrar Pokémon por tipo
+  async function filtrarPorTipo(tipo) {
+    if (!tipo) {
+      listaFiltrada = [...listaPokemones];
+      renderPokemones(listaFiltrada);
+      return;
+    }
+
+    try {
+      const res = await fetch(`https://pokeapi.co/api/v2/type/${tipo}`);
+      const data = await res.json();
+      listaFiltrada = data.pokemon.map(p => p.pokemon);
+      renderPokemones(listaFiltrada);
+    } catch (error) {
+      console.error("Error filtrando por tipo:", error);
+    }
+  }
+
+  // Función para mostrar info de un Pokémon
+  async function mostrarInfoPokemon(nombre) {
+    try {
+      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${nombre}`);
+      const data = await res.json();
+
+      contenedorInfo.innerHTML = `
+        <h2>${data.name.toUpperCase()}</h2>
+        <img src="${data.sprites.front_default}" alt="${data.name}">
+        <p><strong>Altura:</strong> ${data.height}</p>
+        <p><strong>Peso:</strong> ${data.weight}</p>
+        <p><strong>Tipos:</strong> ${data.types.map(t => t.type.name).join(", ")}</p>
+        <p><strong>Habilidades:</strong> ${data.abilities.map(a => a.ability.name).join(", ")}</p>
+        <p><strong>Estadísticas:</strong></p>
+        <ul>
+          ${data.stats.map(s => `<li>${s.stat.name}: ${s.base_stat}</li>`).join("")}
+        </ul>
+      `;
+    } catch (error) {
+      console.error("Error al obtener la info del Pokémon:", error);
+    }
+  }
+
+});

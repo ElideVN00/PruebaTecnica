@@ -1,22 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PokeAPI</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PokeAPI</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+  <style>
+    #info-pokemon {
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #f2f2f2;
+      border-radius: 10px;
+      width: 90%;
+    }
+    .container-pokemones div:hover {
+      cursor: pointer;
+      transform: scale(1.05);
+      transition: 0.2s;
+    }
+  </style>
 </head>
 <body>
-    <h1>PokemonAPI-Elide Villegas</h1>
-    <div class="container">
-        <div class="container-select-pokemon">
-        </div>
-        <div class="container-pokemones">
-        </div>
+  <h1>PokemonAPI-Elide Villegas</h1>
+
+  <div class="container">
+    <div class="container-select-pokemon">
+      <!-- select de tipos se genera por JS -->
     </div>
-   <script src="js/script.js"></script>
+
+    <div class="container-pokemones">
+      <!-- Pokémon generados por JS -->
+    </div>
+  </div>
+
+  <div id="info-pokemon"></div>
+
+  <script src="js/script.js"></script>
 </body>
 </html>
