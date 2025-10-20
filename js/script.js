@@ -1,74 +1,62 @@
 fetch('https://pokeapi.co/api/v2/type/')//Obtener respuesta de API
 .then(response => response.json())//Transformar la respuesta a JSON
 .then((data) =>{ //Obtener la data en JSON
-    console.log(data)//Se muestra en consola la data recuperada para saber como destrucutrarla
-    const types = data.results
+    console.log({tipos: data})//Se muestra en consola la data recuperada para saber como destrucutrarla
+    const tipos = data.results
 
-    const selecttype = document.createElement('select')//Crear elemento HTML tipo select
+    const selectTipos = document.createElement('select')//Crear elemento HTML tipo select
 
     //Iterar sobre el arreglo de types para llenar el select con options (Por CADA elemento en el arreglo types)
-    types.forEach((type) => {
+    tipos.forEach((tipo) => {
 
         /* Crear elemento html */
-        const optionType = document.createElement('option')
-        const typeName = type.name
+        const optionTipo = document.createElement('option')
+        const nombreTipo = tipo.name
 
         /* Asignar atributos html */
-        optionType.value = typeName
-        optionType.textContent = typeName
+        optionTipo.value = nombreTipo
+        optionTipo.textContent = nombreTipo
 
         /* Inyectar como hijo de select en HTML (cada option dentro del select)*/
-        selecttype.appendChild(optionType)
+        selectTipos.appendChild(optionTipo)
     });
 
     /* Obtener un elemento HTML ya existente en el DOM */
-    const contenedor = document.querySelector('.container-select-pokemon')
-    contenedor.appendChild(selecttype)
+    const contenedorSelect = document.querySelector('.container-select-pokemon')
+    contenedorSelect.appendChild(selectTipos)
 
     /* Asignar estilos al contenedor */
-    const contenedorFilters = document.querySelector('.container')
-    contenedorFilters.style.display = 'flex'
-    contenedorFilters.style.flexDirection = 'row'
-    contenedorFilters.style.gap = '2rem'
-    console.log(types)
+    const contenedor = document.querySelector('.container')
+    contenedor.style.display = 'flex'
+    contenedor.style.flexDirection = 'row'
+    contenedor.style.gap = '2rem'
 })
 
 
 fetch('https://pokeapi.co/api/v2/pokemon?limit=1300')
-.then((response) =>{
-    return response.json()
-})
+.then((response) => response.json())
 .then((data)=>{
-    console.log(data)
+    console.log({pokemones: data})
     const pokemones = data.results
-    const contenedor = document.querySelector('.container-pokemones')
+    const contenedorPokemones = document.querySelector('.container-pokemones')
     
-    contenedor.style.display = 'grid'
-    contenedor.style.gridTemplateColumns = 'repeat(4, 1fr)'
-    contenedor.style.gap = '1rem'
+    contenedorPokemones.style.display = 'grid'
+    contenedorPokemones.style.gridTemplateColumns = 'repeat(4, 1fr)'
+    contenedorPokemones.style.gap = '1rem'
     pokemones.forEach((pokemon) => {
         /* Crear HTML */
-        const textName = document.createElement('div')
-        textName.style.padding = '2rem'
-        textName.style.backgroundColor = 'pink'
-        textName.style.textAlign = 'center'
-        textName.style.borderRadius = '10px'
-        textName.style.textTransform = 'uppercase'
-        textName.style.fontFamily = '"Quicksand", sans-serif'
-        textName.style.fontWeight = 'bold'
+        const contenedorNombrePokemon = document.createElement('div')
+        contenedorNombrePokemon.style.padding = '2rem'
+        contenedorNombrePokemon.style.backgroundColor = 'pink'
+        contenedorNombrePokemon.style.textAlign = 'center'
+        contenedorNombrePokemon.style.borderRadius = '10px'
+        contenedorNombrePokemon.style.textTransform = 'uppercase'
+        contenedorNombrePokemon.style.fontFamily = '"Quicksand", sans-serif'
+        contenedorNombrePokemon.style.fontWeight = 'bold'
         /* Asignar Atributos */
-        const pokemonName = pokemon.name
-        textName.textContent = pokemonName
-
+        const nombrePokemon = pokemon.name
+        contenedorNombrePokemon.textContent = nombrePokemon
         /* inyectar */
-        contenedor.appendChild(textName)
-
-
+        contenedorPokemones.appendChild(contenedorNombrePokemon)
     })
-
 })
-
-function hablar(){
-    console.log('hablando...')
-}
-
