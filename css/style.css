@@ -1,0 +1,14 @@
+h1 {
+    text-align: center;
+    color: black;
+} 
+
+.container-pokemones {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.container-filters {
+    display: flex;
+    flex-direction: row;
+}
